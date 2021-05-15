@@ -24,7 +24,7 @@ defaultTasks("clean", "vaadinBuildFrontend", "build")
 repositories {
   mavenLocal()
   mavenCentral()
-  jcenter() // for Gretty runners
+  jcenter()
   maven {
     url = uri("https://maven.vaadin.com/vaadin-addons")
   }
