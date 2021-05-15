@@ -6,16 +6,14 @@ object Defs {
   const val vaadinonkotlin_version = "1.0.6"
   const val vaadin10_version = "14.5.3"
   const val kotlin_version = "1.5.0"
-  const val spring_boot_version = "2.4.3"
+  const val spring_boot_version = "2.4.5"
   const val vaadin_plugin = "0.14.5.1"
-  //const val gretty_plugin = "3.0.1"
 }
 
 plugins {
-  id("org.springframework.boot") version  "2.4.3"
+  id("org.springframework.boot") version  "2.4.5"
   id("io.spring.dependency-management") version "1.0.11.RELEASE"
   kotlin("jvm") version "1.5.0"
-  //id("org.gretty") version "3.0.3"
   war
   id("com.vaadin") version "0.14.3.7"
   kotlin("plugin.spring") version "1.5.0"
@@ -32,13 +30,6 @@ repositories {
   }
 }
 
-/*
-gretty {
-  contextPath = "/"
-  servletContainer = "jetty9.4"
-}
-
- */
 val staging: Configuration by configurations.creating
 
 tasks.withType<KotlinCompile> {
@@ -70,14 +61,12 @@ dependencies {
   }
   implementation("com.vaadin:vaadin-spring-boot-starter:${vaadin10_version}")
   providedCompile("javax.servlet:javax.servlet-api:3.1.0")
-  
-  implementation("com.zaxxer:HikariCP:3.4.1")
+
   // logging
   implementation("ch.qos.logback:logback-classic:1.2.3")
   implementation("org.slf4j:slf4j-api:1.7.30")
   implementation("org.sql2o:sql2o:1.6.0")
   implementation("mysql:mysql-connector-java:5.1.48")
-  implementation("com.zaxxer:HikariCP:3.4.1")
   implementation("org.imgscalr:imgscalr-lib:4.2")
   implementation("com.jcraft:jsch:0.1.55")
   implementation("org.cups4j:cups4j:0.7.6")
