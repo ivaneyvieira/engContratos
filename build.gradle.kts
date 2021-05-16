@@ -10,6 +10,7 @@ object Defs {
   const val vaadin_plugin = "0.14.5.1"
 }
 
+
 plugins {
   id("org.springframework.boot") version  "2.4.5"
   id("io.spring.dependency-management") version "1.0.11.RELEASE"
