@@ -15,7 +15,7 @@ class NotaEntrada(
   val obsNota: String,
   val remarks: String,
   val rmk: String,
-                 ){
+                 ) {
 
   fun listEmailNota() = saci.listEmailNota(this)
 

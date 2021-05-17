@@ -29,7 +29,7 @@ class LoginView : KComposite(), BeforeEnterObserver {
   private lateinit var loginForm: LoginForm
   private val root = ui {
     verticalLayout {
-      setSizeFull(); isPadding = false;
+      setSizeFull(); isPadding = false
       content { center() }
 
       val loginI18n = loginI18n()
@@ -37,8 +37,7 @@ class LoginView : KComposite(), BeforeEnterObserver {
         addLoginListener { e ->
           if (!SecurityUtils.login(e.username, e.password)) {
             isError = true
-          }
-          else navigateToView(AppConfig.mainClass)
+          } else navigateToView(AppConfig.mainClass)
         }
       }
     }

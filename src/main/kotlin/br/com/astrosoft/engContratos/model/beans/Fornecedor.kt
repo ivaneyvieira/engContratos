@@ -13,9 +13,9 @@ class Fornecedor(
                 ) {
   fun notaFornecedor() = saci.listNotaFornecedor(this)
 
-  companion object{
+  companion object {
     fun findFornecedores(filtro: FiltroFonecedor) = saci.listFornecedores(filtro)
   }
 }
 
-data class FiltroFonecedor(val localizador : String)
+data class FiltroFonecedor(val localizador: String)

@@ -23,12 +23,9 @@ class NFFile(
 
   companion object {
     fun new(nota: NotaEntrada, fileName: String, bytes: ByteArray): NFFile {
-      return NFFile(storeno = nota.loja,
-                    pdvno = 9999,
-                    xano = nota.ni,
-                    date = LocalDate.now(),
-                    nome = fileName,
-                    file = bytes)
+      return NFFile(
+        storeno = nota.loja, pdvno = 9999, xano = nota.ni, date = LocalDate.now(), nome = fileName, file = bytes
+                   )
     }
   }
 }

@@ -9,7 +9,9 @@ import com.vaadin.flow.component.dependency.CssImport
 import com.vaadin.flow.router.PageTitle
 import com.vaadin.flow.router.Route
 
-@Route("", layout = ApplicaitonLayout::class) @PageTitle("Contratos") @CssImport("./styles/gridTotal.css")
+@Route("", layout = ApplicaitonLayout::class)
+@PageTitle("Contratos")
+@CssImport("./styles/gridTotal.css")
 class ContratoView : ViewLayout<ContratoViewModel>(), IContratoView {
   override val viewModel = ContratoViewModel(this)
   override val tabFornecedor = TabFornededor(viewModel.tabFornecedorViewModel)

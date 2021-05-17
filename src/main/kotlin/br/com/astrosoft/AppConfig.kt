@@ -5,8 +5,6 @@ import br.com.astrosoft.engContratos.view.contrato.ContratoView
 import br.com.astrosoft.framework.model.IUser
 import br.com.astrosoft.framework.spring.SecurityUtils
 import br.com.astrosoft.framework.view.ViewUtil
-import com.vaadin.flow.component.Component
-import kotlin.reflect.KClass
 
 object AppConfig {
   val mainClass = ContratoView::class

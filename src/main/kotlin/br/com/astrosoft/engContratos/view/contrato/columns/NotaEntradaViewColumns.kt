@@ -7,7 +7,7 @@ import br.com.astrosoft.framework.view.addColumnLocalDate
 import br.com.astrosoft.framework.view.addColumnString
 import com.vaadin.flow.component.grid.Grid
 
-object NotaEntradaViewColumns{
+object NotaEntradaViewColumns {
   fun Grid<NotaEntrada>.notaLoja() = addColumnInt(NotaEntrada::loja) {
     this.setHeader("Loja")
   }

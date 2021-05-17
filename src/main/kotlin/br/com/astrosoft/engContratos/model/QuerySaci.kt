@@ -41,14 +41,14 @@ class QuerySaci : QueryDB(driver, url, username, password) {
 
   fun listFornecedores(filtro: FiltroFonecedor): List<Fornecedor> {
     val sql = "/sqlSaci/listFornecedores.sql"
-    return query(sql, Fornecedor::class){
+    return query(sql, Fornecedor::class) {
       addOptionalParameter("localizador", filtro.localizador)
     }
   }
 
   fun listNotaFornecedor(fornecedor: Fornecedor): List<NotaEntrada> {
     val sql = "/sqlSaci/listNotaFornecedor.sql"
-    return query(sql, NotaEntrada::class){
+    return query(sql, NotaEntrada::class) {
       addOptionalParameter("vendno", fornecedor.vendno)
     }
   }
