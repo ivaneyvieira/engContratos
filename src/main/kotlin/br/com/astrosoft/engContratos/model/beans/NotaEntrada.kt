@@ -1,8 +1,9 @@
 package br.com.astrosoft.engContratos.model.beans
 
+import br.com.astrosoft.engContratos.model.saci
 import java.time.LocalDate
 
-class NotaSaida(
+class NotaEntrada(
   val loja: Int,
   val sigla: String,
   val ni: Int,
@@ -13,4 +14,12 @@ class NotaSaida(
   val valor: Double,
   val obsNota: String,
   val remarks: String,
-               )
+  val rmk: String,
+                 ){
+
+  fun listEmailNota() = saci.listEmailNota(this)
+
+  fun listFiles() = saci.selectFile(this)
+
+  fun saveRmk() = saci.saveRmk(this)
+}

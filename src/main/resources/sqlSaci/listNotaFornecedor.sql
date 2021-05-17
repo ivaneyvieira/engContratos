@@ -9,9 +9,12 @@ SELECT N.storeno                                                                
        N.vendno                                                                   AS vendno,
        SUM(N.grossamt / 100)                                                      AS valor,
        IFNULL(N.remarks, '')                                                      AS obsNota,
-       remarks                                                                    AS remarks
-FROM sqldados.inv           AS N
-  INNER JOIN sqldados.store AS S
+       remarks                                                                    AS remarks,
+       IFNULL(R.rmk, '')                                                          AS rmk
+FROM sqldados.inv              AS N
+  LEFT JOIN  sqldados.nfdevRmk AS R
+	       ON N.storeno = R.storeno AND R.pdvno = 9999 AND N.invno = R.xano
+  INNER JOIN sqldados.store    AS S
 	       ON S.no = N.storeno
 WHERE (N.bits & POW(2, 4) = 0)
   AND N.vendno = @VENDNO

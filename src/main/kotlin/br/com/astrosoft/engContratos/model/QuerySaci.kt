@@ -4,6 +4,7 @@ import br.com.astrosoft.AppConfig
 import br.com.astrosoft.engContratos.model.beans.*
 import br.com.astrosoft.framework.model.QueryDB
 import br.com.astrosoft.framework.util.DB
+import br.com.astrosoft.framework.util.toSaciDate
 
 class QuerySaci : QueryDB(driver, url, username, password) {
   fun findUser(login: String?): UserSaci? {
@@ -45,10 +46,132 @@ class QuerySaci : QueryDB(driver, url, username, password) {
     }
   }
 
-  fun listNotaFornecedor(fornecedor: Fornecedor): List<NotaSaida> {
+  fun listNotaFornecedor(fornecedor: Fornecedor): List<NotaEntrada> {
     val sql = "/sqlSaci/listNotaFornecedor.sql"
-    return query(sql, NotaSaida::class){
+    return query(sql, NotaEntrada::class){
       addOptionalParameter("vendno", fornecedor.vendno)
+    }
+  }
+
+  fun saveRmk(nota: NotaEntrada) {
+    val sql = "/sqlSaci/rmkUpdate.sql"
+
+    script(sql) {
+      addOptionalParameter("storeno", nota.loja)
+      addOptionalParameter("pdvno", 9999)
+      addOptionalParameter("xano", nota.ni)
+      addOptionalParameter("rmk", nota.rmk)
+    }
+  }
+
+  fun listEmailNota(nota: NotaEntrada): List<EmailDB> {
+    val sql = "/sqlSaci/listEmailEnviado.sql"
+    return query(sql, EmailDB::class) {
+      addOptionalParameter("storeno", nota.loja)
+      addOptionalParameter("pdvno", 9999)
+      addOptionalParameter("xano", nota.ni)
+    }
+  }
+
+  fun newEmailId(): Int {
+    val sql = "select MAX(idEmail + 1) as max from sqldados.devEmail"
+    return query(sql, Max::class).firstOrNull()?.max ?: 1
+  }
+
+  fun listEmailPara(): List<EmailDB> {
+    val sql = "/sqlSaci/listEmailEnviadoPara.sql" //return emptyList()
+    return query(sql, EmailDB::class)
+  }
+
+  fun salvaEmailEnviado(gmail: EmailGmail, nota: NotaEntrada, idEmail: Int) {
+    val sql = "/sqlSaci/salvaEmailEnviado.sql"
+    val storeno = nota.loja
+    val pdvno = 9999
+    val xano = nota.ni
+    script(sql) {
+      addOptionalParameter("idEmail", idEmail)
+      addOptionalParameter("storeno", storeno)
+      addOptionalParameter("pdvno", pdvno)
+      addOptionalParameter("xano", xano)
+      addOptionalParameter("email", gmail.email)
+      addOptionalParameter("messageID", gmail.messageID)
+      addOptionalParameter("assunto", gmail.assunto)
+      addOptionalParameter("msg", gmail.msg())
+      addOptionalParameter("planilha", gmail.planilha)
+      addOptionalParameter("relatorio", gmail.relatorio)
+      addOptionalParameter("anexos", gmail.anexos)
+    }
+  }
+
+  fun salvaEmailEnviado(gmail: EmailGmail, idEmail: Int) {
+    val sql = "/sqlSaci/salvaEmailEnviado.sql"
+    val storeno = 0
+    val pdvno = 0
+    val xano = 0
+    script(sql) {
+      addOptionalParameter("idEmail", idEmail)
+      addOptionalParameter("storeno", storeno)
+      addOptionalParameter("pdvno", pdvno)
+      addOptionalParameter("xano", xano)
+      addOptionalParameter("email", gmail.email)
+      addOptionalParameter("assunto", gmail.assunto)
+      addOptionalParameter("messageID", gmail.messageID)
+      addOptionalParameter("msg", gmail.msg())
+      addOptionalParameter("planilha", gmail.planilha)
+      addOptionalParameter("relatorio", gmail.relatorio)
+      addOptionalParameter("anexos", gmail.anexos)
+    }
+  }
+
+  fun listNotasEmailNota(idEmail: Int): List<EmailDB> {
+    val sql = "/sqlSaci/listNotasEmailEnviado.sql"
+    return query(sql, EmailDB::class) {
+      addOptionalParameter("idEmail", idEmail)
+    }
+  }
+
+  //Files
+  fun insertFile(file: NFFile) {
+    val sql = "/sqlSaci/fileInsert.sql"
+    script(sql) {
+      addOptionalParameter("storeno", file.storeno)
+      addOptionalParameter("pdvno", file.pdvno)
+      addOptionalParameter("xano", file.xano)
+      addOptionalParameter("date", file.date.toSaciDate())
+      addOptionalParameter("nome", file.nome)
+      addOptionalParameter("file", file.file)
+    }
+  }
+
+  fun updateFile(file: NFFile) {
+    val sql = "/sqlSaci/fileUpdate.sql"
+    script(sql) {
+      addOptionalParameter("storeno", file.storeno)
+      addOptionalParameter("pdvno", file.pdvno)
+      addOptionalParameter("xano", file.xano)
+      addOptionalParameter("date", file.date.toSaciDate())
+      addOptionalParameter("nome", file.nome)
+      addOptionalParameter("file", file.file)
+    }
+  }
+
+  fun deleteFile(file: NFFile) {
+    val sql = "/sqlSaci/fileDelete.sql"
+    script(sql) {
+      addOptionalParameter("storeno", file.storeno)
+      addOptionalParameter("pdvno", file.pdvno)
+      addOptionalParameter("xano", file.xano)
+      addOptionalParameter("date", file.date.toSaciDate())
+      addOptionalParameter("nome", file.nome)
+    }
+  }
+
+  fun selectFile(nfe: NotaEntrada): List<NFFile> {
+    val sql = "/sqlSaci/fileSelect.sql"
+    return query(sql, NFFile::class) {
+      addOptionalParameter("storeno", nfe.loja)
+      addOptionalParameter("pdvno", 9999)
+      addOptionalParameter("xano", nfe.ni)
     }
   }
 
