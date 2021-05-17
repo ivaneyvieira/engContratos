@@ -34,10 +34,8 @@ class UsuarioView : UserLayout<UserSaci, UsuarioViewModel>(), IUsuarioView {
         isReadOnly = readOnly
         binder.bind(this, UserSaci::no.name)
       }
-      if (operation in listOf(ADD, READ, DELETE, UPDATE)) comboBox<String>("Login") {
+      if (operation in listOf(ADD, READ, DELETE, UPDATE)) textField("Login") {
         isReadOnly = readOnly
-        setItems(viewModel.listLogins().sorted())
-        isAllowCustomValue = false
         binder.bind(this, UserSaci::login.name)
       }
       if (operation in listOf(READ, DELETE, UPDATE)) textField("Nome") {
@@ -61,24 +59,6 @@ class UsuarioView : UserLayout<UserSaci, UsuarioViewModel>(), IUsuarioView {
           }
           isAllowCustomValue = false
           binder.bind(this, UserSaci::storeno.name)
-        }
-        formLayout {
-          h4("Devolução") {
-            colspan = 2
-          }
-
-
-        }
-        formLayout {
-          h4("Agenda") {
-            colspan = 2
-          }
-
-        }
-        formLayout {
-          h4("Recebimento") {
-            colspan = 2
-          }
         }
       }
     }

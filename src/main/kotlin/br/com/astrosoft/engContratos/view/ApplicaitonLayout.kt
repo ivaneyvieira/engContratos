@@ -1,6 +1,10 @@
 package br.com.astrosoft.engContratos.view
 
 import br.com.astrosoft.AppConfig
+import br.com.astrosoft.engContratos.view.contrato.ContratoView
+import br.com.astrosoft.framework.spring.LoginView
+import br.com.astrosoft.framework.spring.SecurityUtils
+import br.com.astrosoft.framework.spring.Session
 import com.github.mvysny.karibudsl.v10.button
 import com.github.mvysny.karibudsl.v10.drawer
 import com.github.mvysny.karibudsl.v10.drawerToggle
@@ -19,12 +23,15 @@ import com.github.mvysny.karibudsl.v10.verticalLayout
 import com.vaadin.flow.component.applayout.AppLayout
 import com.vaadin.flow.component.dependency.JsModule
 import com.vaadin.flow.component.icon.VaadinIcon.USER
+import com.vaadin.flow.component.icon.VaadinIcon.WORKPLACE
 import com.vaadin.flow.component.page.Push
 import com.vaadin.flow.component.tabs.Tabs
+import com.vaadin.flow.router.BeforeEnterEvent
+import com.vaadin.flow.router.BeforeEnterObserver
+import com.vaadin.flow.router.RouterLayout
 import com.vaadin.flow.server.PWA
 import com.vaadin.flow.theme.Theme
 import com.vaadin.flow.theme.lumo.Lumo
-import org.springframework.security.core.context.SecurityContextHolder
 
 @Theme(value = Lumo::class, variant = Lumo.DARK)
 @Push
@@ -32,7 +39,8 @@ import org.springframework.security.core.context.SecurityContextHolder
      shortName = AppConfig.shortName,
      iconPath = AppConfig.iconPath,
      enableInstallPrompt = false)
-@JsModule("./styles/shared-styles.js") class ApplicaitonLayout : AppLayout() {
+@JsModule("./styles/shared-styles.js")
+class ApplicaitonLayout : AppLayout(), RouterLayout, BeforeEnterObserver {
   init {
     isDrawerOpened = true
     navbar {
@@ -43,7 +51,7 @@ import org.springframework.security.core.context.SecurityContextHolder
       } //anchor("logout", "Sair")
       button("Sair") {
         onLeftClick {
-          SecurityContextHolder.clearContext()
+          Session.current.close()
           ui.ifPresent {
             it.session.close()
             it.navigate("")
@@ -57,6 +65,15 @@ import org.springframework.security.core.context.SecurityContextHolder
         label(AppConfig.user?.login)
       }
       hr()
+      tabs {
+        orientation = Tabs.Orientation.VERTICAL
+
+        tab {
+          this.icon(WORKPLACE)
+          routerLink(text = "Contrato", viewType = ContratoView::class)
+        }
+      }
+
 
       tabs {
         orientation = Tabs.Orientation.VERTICAL
@@ -67,6 +84,12 @@ import org.springframework.security.core.context.SecurityContextHolder
           routerLink(text = "Usuário", viewType = UsuarioView::class)
         }
       }
+    }
+  }
+
+  override fun beforeEnter(event: BeforeEnterEvent) {
+    if (!SecurityUtils.isUserLoggedIn) {
+      event.rerouteTo(LoginView::class.java)
     }
   }
 }

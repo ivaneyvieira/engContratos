@@ -1,25 +1,25 @@
 package br.com.astrosoft.framework.spring
 
-import com.vaadin.flow.server.HandlerHelper.RequestType
-import com.vaadin.flow.shared.ApplicationConstants
-import org.springframework.security.core.context.SecurityContextHolder
-import javax.servlet.http.HttpServletRequest
+import br.com.astrosoft.AppConfig
+import br.com.astrosoft.framework.model.IUser
 
 object SecurityUtils {
-  fun isFrameworkInternalRequest(request: HttpServletRequest?): Boolean {
-    val parameterValue =
-      request?.getParameter(ApplicationConstants.REQUEST_TYPE_PARAMETER) ?: return false
-    return RequestType.values().any { it.identifier == parameterValue }
+  fun login(username: String?, password: String?): Boolean {
+    val user = AppConfig.findUser(username) ?: return false
+    return if (user.senha == password) {
+      Session[IUser::class] = user
+      true
+    }
+    else {
+      Session.current.close()
+      false
+    }
   }
 
   val isUserLoggedIn: Boolean
-    get() {
-      val authentication = SecurityContextHolder.getContext().authentication ?: return false
-      return authentication.isAuthenticated
-    }
-  val userDetails: UserSaciDetails?
-    get() {
-      val authentication = SecurityContextHolder.getContext().authentication ?: return null
-      return authentication.principal as? UserSaciDetails
-    }
+    get() = Session[IUser::class] != null
+
+  val userDetails: IUser?
+    get() = Session[IUser::class]
+
 }

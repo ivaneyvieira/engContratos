@@ -6,18 +6,14 @@ object Defs {
   const val vaadinonkotlin_version = "1.0.6"
   const val vaadin10_version = "14.5.3"
   const val kotlin_version = "1.5.0"
-  const val spring_boot_version = "2.4.5"
   const val vaadin_plugin = "0.14.5.1"
 }
 
 
 plugins {
-  id("org.springframework.boot") version  "2.4.5"
-  id("io.spring.dependency-management") version "1.0.11.RELEASE"
   kotlin("jvm") version "1.5.0"
   war
   id("com.vaadin") version "0.14.3.7"
-  kotlin("plugin.spring") version "1.5.0"
 }
 
 defaultTasks("clean", "vaadinBuildFrontend", "build")
@@ -45,11 +41,6 @@ version = "1.0"
 java.sourceCompatibility = org.gradle.api.JavaVersion.VERSION_1_8
 
 dependencies {
-  //Spring
-
-  implementation("org.springframework.boot:spring-boot-starter-security")
-  implementation("org.springframework.session:spring-session-core")
-  providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
   // Vaadin-on-Kotlin dependency, includes Vaadin
   implementation("com.github.mvysny.karibudsl:karibu-dsl:${vaadinonkotlin_version}")
   // Vaadin 14
@@ -60,7 +51,6 @@ dependencies {
            "org.webjars.bowergithub.vaadin", "org.webjars.bowergithub.webcomponents")
       .forEach { exclude(group = it) }
   }
-  implementation("com.vaadin:vaadin-spring-boot-starter:${vaadin10_version}")
   providedCompile("javax.servlet:javax.servlet-api:3.1.0")
 
   // logging
@@ -105,19 +95,10 @@ dependencies {
   implementation("javax.xml.bind:jaxb-api:2.3.1")
   implementation("com.sun.mail:javax.mail:1.6.2")
   implementation("com.sun.mail:gimap:1.6.2")
-  
-  developmentOnly("org.springframework.boot:spring-boot-devtools")
-  providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
 }
 
 vaadin {
   pnpmEnable = false
   productionMode = false
-}
-
-dependencyManagement {
-  imports {
-    mavenBom("com.vaadin:vaadin-bom:${vaadin10_version}")
-  }
 }
 

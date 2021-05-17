@@ -12,7 +12,7 @@ class UserSaci : IUser {
   override var senha: String = ""
   var bitAcesso: Int = 0
   var storeno: Int = 0
-  var impressora: String = ""
+  var impressora: String? = ""
   override var ativo by DelegateAuthorized(0)
   override val admin
     get() = login == "ADM"
