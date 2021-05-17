@@ -37,7 +37,6 @@ tasks.withType<KotlinCompile> {
 }
 
 group = "engContratos"
-version = "1.0"
 java.sourceCompatibility = org.gradle.api.JavaVersion.VERSION_1_8
 
 dependencies {
