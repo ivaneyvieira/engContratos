@@ -6,7 +6,6 @@ import br.com.astrosoft.engContratos.view.contrato.columns.EmailDBViewColumns.em
 import br.com.astrosoft.engContratos.view.contrato.columns.EmailDBViewColumns.emailEmail
 import br.com.astrosoft.engContratos.view.contrato.columns.EmailDBViewColumns.emailHora
 import br.com.astrosoft.engContratos.view.contrato.columns.EmailDBViewColumns.emailTipo
-import br.com.astrosoft.engContratos.view.contrato.columns.FornecedorViewColumns.fornecedorCliente
 import br.com.astrosoft.engContratos.view.contrato.columns.FornecedorViewColumns.fornecedorCodigo
 import br.com.astrosoft.engContratos.view.contrato.columns.FornecedorViewColumns.fornecedorNome
 import br.com.astrosoft.engContratos.view.contrato.columns.FornecedorViewColumns.fornecedorUltimaData
@@ -37,6 +36,7 @@ import com.vaadin.flow.component.grid.Grid.SelectionMode.MULTI
 import com.vaadin.flow.component.grid.GridSortOrder
 import com.vaadin.flow.component.grid.GridVariant.LUMO_COMPACT
 import com.vaadin.flow.component.html.Div
+import com.vaadin.flow.component.icon.Icon
 import com.vaadin.flow.component.icon.VaadinIcon.*
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
@@ -110,7 +110,6 @@ class TabFornededor(val viewModel: TabFornecedorViewModel) : TabPanelGrid<Fornec
     }
     fornecedorUltimaData()
     fornecedorCodigo()
-    fornecedorCliente()
     fornecedorNome()
   }
 }
@@ -152,13 +151,13 @@ class DlgNota(val viewModel: TabFornecedorViewModel) {
       isMultiSort = false
       setSelectionMode(MULTI)
       setItems(listNotas) //
-      addColumnButton(FILE_PICTURE, "Arquivos", "Arq") { nota ->
+      addColumnButton(FILE_PICTURE, "Arquivos", "Arq", ::configIconArq) { nota ->
         viewModel.editFile(nota)
       }
-      addColumnButton(EDIT, "Editor", "Edt") { nota ->
+      addColumnButton(EDIT, "Editor", "Edt", ::configIconEdt) { nota ->
         viewModel.editRmk(nota)
       }
-      addColumnButton(ENVELOPE_O, "Editor", "Email") { nota ->
+      addColumnButton(ENVELOPE_O, "Editor", "Email", ::configMostraEmail) { nota ->
         viewModel.mostrarEmailNota(nota)
       }
 
@@ -172,6 +171,21 @@ class DlgNota(val viewModel: TabFornecedorViewModel) {
       }
       sort(listOf(GridSortOrder(getColumnBy(NotaEntrada::dataNota), SortDirection.ASCENDING)))
     }
+  }
+
+  private fun configIconEdt(icon: Icon, nota: NotaEntrada) {
+    if (nota.rmk.isNotBlank()) icon.color = "DarkGreen"
+    else icon.color = ""
+  }
+
+  private fun configMostraEmail(icon: Icon, nota: NotaEntrada) {
+    if (nota.listEmailNota().isNotEmpty()) icon.color = "DarkGreen"
+    else icon.color = ""
+  }
+
+  private fun configIconArq(icon: Icon, nota: NotaEntrada) {
+    if (nota.listFiles().isNotEmpty()) icon.color = "DarkGreen"
+    else icon.color = ""
   }
 }
 
@@ -219,14 +233,16 @@ class FormEmail(val viewModel: IEmailView, notas: List<NotaEntrada>, emailEnviad
   private lateinit var chkRelatorio: Checkbox
   private lateinit var cmbEmail: ComboBox<String>
   private var gmail: EmailGmail
-    get() = EmailGmail(email = cmbEmail.value ?: "",
-                       assunto = edtAssunto.value ?: "",
-                       msg = { rteMessage.value ?: "" },
-                       msgHtml = rteMessage.value ?: "",
-                       planilha = if (chkPlanilha.value) "S" else "N",
-                       relatorio = if (chkRelatorio.value) "S" else "N",
-                       anexos = if (chkAnexos.value) "S" else "N",
-                       messageID = "")
+    get() = EmailGmail(
+      email = cmbEmail.value ?: "",
+      assunto = edtAssunto.value ?: "",
+      msg = { rteMessage.value ?: "" },
+      msgHtml = rteMessage.value ?: "",
+      planilha = if (chkPlanilha.value) "S" else "N",
+      relatorio = if (chkRelatorio.value) "S" else "N",
+      anexos = if (chkAnexos.value) "S" else "N",
+      messageID = ""
+                      )
     set(value) {
       cmbEmail.value = value.email
       edtAssunto.value = value.assunto
@@ -238,7 +254,7 @@ class FormEmail(val viewModel: IEmailView, notas: List<NotaEntrada>, emailEnviad
 
   init {
     val fornecedores = Fornecedor.findFornecedores(FiltroFonecedor(""))
-    val fornecedor = notas.map {it.vendno }.distinct().mapNotNull { vendno ->
+    val fornecedor = notas.map { it.vendno }.distinct().mapNotNull { vendno ->
       fornecedores.firstOrNull { it.vendno == vendno }
     }.firstOrNull()
     rteMessage = richEditor()

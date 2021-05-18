@@ -11,10 +11,6 @@ object FornecedorViewColumns {
     this.setHeader("Fornecedor")
   }
 
-  fun Grid<Fornecedor>.fornecedorCliente() = addColumnInt(Fornecedor::custno) {
-    this.setHeader("Cliente")
-  }
-
   fun Grid<Fornecedor>.fornecedorNome() = addColumnString(Fornecedor::nomeFantasia) {
     this.setHeader("Fornecedor")
   }

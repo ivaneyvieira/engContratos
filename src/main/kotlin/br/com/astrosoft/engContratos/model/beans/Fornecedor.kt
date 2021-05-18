@@ -8,10 +8,9 @@ class Fornecedor(
   val nome: String,
   val abreviacao: String,
   val email: String,
-  val custno: Int,
   val nomeFantasia: String,
   var rmkVend: String,
-  val ultimaData: LocalDate?
+  val ultimaData: LocalDate
                 ) {
   fun notaFornecedor() = saci.listNotaFornecedor(this)
 
