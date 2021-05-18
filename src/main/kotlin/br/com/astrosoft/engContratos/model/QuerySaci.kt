@@ -175,6 +175,15 @@ class QuerySaci : QueryDB(driver, url, username, password) {
     }
   }
 
+  fun saveRmkVend(fornecedor: Fornecedor) {
+    val sql = "/sqlSaci/rmkUpdateVend.sql"
+    script(sql) {
+      addOptionalParameter("vendno", fornecedor.vendno)
+      addOptionalParameter("tipo", "99")
+      addOptionalParameter("rmk", fornecedor.rmkVend)
+    }
+  }
+
   companion object {
     private val db = DB("saci")
     internal val driver = db.driver

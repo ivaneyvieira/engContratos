@@ -31,7 +31,6 @@ class EmailDB(
     msgHtml = "",
     planilha = planilha,
     relatorio = relatorio,
-    relatorioResumido = "N",
     anexos = anexos,
     messageID = messageID
                               )

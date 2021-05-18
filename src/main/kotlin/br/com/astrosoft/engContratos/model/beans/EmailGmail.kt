@@ -10,7 +10,6 @@ data class EmailGmail(
   val msgHtml: String,
   val planilha: String,
   val relatorio: String,
-  val relatorioResumido: String,
   val anexos: String
                      ) {
   fun salvaEmail(idEmail: Int) {
