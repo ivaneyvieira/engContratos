@@ -73,6 +73,13 @@ class QuerySaci : QueryDB(driver, url, username, password) {
     }
   }
 
+  fun produtosEntrada(notaSaida: NotaEntrada): List<ProdutosNotaSaida> {
+    val sql = "/sqlSaci/listNotaProduto.sql"
+    return query(sql, ProdutosNotaSaida::class) {
+      addOptionalParameter("invno", notaSaida.ni)
+    }
+  }
+
   fun newEmailId(): Int {
     val sql = "select MAX(idEmail + 1) as max from sqldados.devEmail"
     return query(sql, Max::class).firstOrNull()?.max ?: 1

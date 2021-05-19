@@ -49,7 +49,7 @@ class NotaEntrada(
     }
   }
 
-  fun listaProdutos() = emptyList<ProdutosNotaSaida>()
+  fun listaProdutos() = saci.produtosEntrada(this)
 
   fun salvaEmail(gmail: EmailGmail, idEmail: Int) {
     saci.salvaEmailEnviado(gmail, this, idEmail)

@@ -15,12 +15,8 @@ import br.com.astrosoft.framework.util.format
 
 class PlanilhaNotas {
   private val campos: List<Campo<*, ProdutosNotaSaida>> = listOf(
-    CampoString("Rótulo") { rotulo },
     CampoInt("Fornecedor") { vendno },
     CampoInt("NI") { invno },
-    CampoString("NF") { notaInv },
-    CampoString("Emissão") { dateInv?.format() ?: "" },
-    CampoInt("Qnt NI") { quantInv },
     CampoInt("Qnt Dev") { qtde },
     CampoString("Código") { codigo },
     CampoString("Descrição") { descricao },
@@ -30,10 +26,6 @@ class PlanilhaNotas {
     CampoNumber("R$ IPI") { ipi },
     CampoNumber("R$ ST") { vst },
     CampoNumber("R$ Total") { valorTotalIpi },
-    CampoString("Chave") {
-      val text = chaveUlt ?: ""
-      text.substring(0, 6.coerceAtMost(text.length))
-    },
                                                                 )
 
   fun grava(listaNotas: List<NotaEntrada>): ByteArray {

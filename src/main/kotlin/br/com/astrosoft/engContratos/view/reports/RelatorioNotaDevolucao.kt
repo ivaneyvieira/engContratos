@@ -3,11 +3,8 @@ package br.com.astrosoft.engContratos.view.reports
 import br.com.astrosoft.engContratos.model.beans.NotaEntrada
 import br.com.astrosoft.engContratos.model.beans.ProdutosNotaSaida
 import br.com.astrosoft.framework.util.format
-import br.com.astrosoft.framework.view.reports.Templates
+import br.com.astrosoft.framework.view.reports.*
 import br.com.astrosoft.framework.view.reports.Templates.fieldFontGrande
-import br.com.astrosoft.framework.view.reports.horizontalList
-import br.com.astrosoft.framework.view.reports.text
-import br.com.astrosoft.framework.view.reports.verticalBlock
 import net.sf.dynamicreports.jasper.builder.JasperReportBuilder
 import net.sf.dynamicreports.report.builder.DynamicReports.*
 import net.sf.dynamicreports.report.builder.column.ColumnBuilder
@@ -21,7 +18,6 @@ import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput
 import java.io.ByteArrayOutputStream
 import java.time.LocalDate
 import java.time.LocalTime
-import java.util.*
 
 class RelatorioNotaDevolucao(val notaSaida: NotaEntrada) {
   val codigoCol: TextColumnBuilder<String> =
@@ -90,12 +86,7 @@ class RelatorioNotaDevolucao(val notaSaida: NotaEntrada) {
     this.setPattern("#,##0.00")
     this.setFixedWidth(50)
   }
-  val barcodeCol: TextColumnBuilder<String> = col.column(
-    "Cód Barra", ProdutosNotaSaida::barcode.name, type.stringType()
-                                                        ).apply {
-    this.setHorizontalTextAlignment(CENTER)
-    this.setFixedWidth(80)
-  }
+
   val unCol: TextColumnBuilder<String> = col.column("Unid", ProdutosNotaSaida::un.name, type.stringType()).apply {
     this.setHorizontalTextAlignment(CENTER)
     this.setFixedWidth(30)
@@ -105,42 +96,10 @@ class RelatorioNotaDevolucao(val notaSaida: NotaEntrada) {
     this.setPattern("0")
     this.setFixedWidth(50)
   }
-  val quantInvCol: TextColumnBuilder<Int> =
-    col.column("Quant NI", ProdutosNotaSaida::quantInv.name, type.integerType()).apply {
-      this.setPattern("#,##0")
-      this.setHorizontalTextAlignment(RIGHT)
-      this.setFixedWidth(40)
-    }
-  val notaInvCol: TextColumnBuilder<String> =
-    col.column("Nota", ProdutosNotaSaida::notaInv.name, type.stringType()).apply {
-      this.setHorizontalTextAlignment(RIGHT)
-      this.setFixedWidth(50)
-    }
-  val dateInvCol: TextColumnBuilder<Date> =
-    col.column("Data", ProdutosNotaSaida::dateInvDate.name, type.dateType()).apply {
-      this.setPattern("dd/MM/yyyy")
-      this.setHorizontalTextAlignment(RIGHT)
-      this.setFixedWidth(50)
-    }
-  val valorUnitInvCol: TextColumnBuilder<Double> = col.column(
-    "R$ Unit", ProdutosNotaSaida::valorUnitInv.name, type.doubleType()
-                                                             ).apply {
-    this.setPattern("#,##0.00")
-    this.setHorizontalTextAlignment(RIGHT)
-    this.setFixedWidth(50)
-  }
-  val valortotalInvCol: TextColumnBuilder<Double> = col.column(
-    "R$ Valor Total", ProdutosNotaSaida::valorTotalInv.name, type.doubleType()
-                                                              ).apply {
-    this.setPattern("#,##0.00")
-    this.setHorizontalTextAlignment(RIGHT)
-    this.setFixedWidth(50)
-  }
 
   private fun columnBuilder(): List<ColumnBuilder<*, *>> {
     return listOf(
       itemCol,
-      barcodeCol,
       refForCol,
       codigoCol,
       descricaoCol,
@@ -150,9 +109,6 @@ class RelatorioNotaDevolucao(val notaSaida: NotaEntrada) {
       qtdeCol,
       valorUnitarioCol,
       valorTotalCol,
-      ipiCol,
-      vstCol,
-      valorTotalIpiCol
                  )
   }
 
@@ -195,6 +151,15 @@ class RelatorioNotaDevolucao(val notaSaida: NotaEntrada) {
                )
   }
 
+  private fun sumaryBuild(): ComponentBuilder<*, *> {
+    return verticalBlock {
+      breakLine()
+
+      text("OBSERVAÇÕES:", LEFT, 100)
+      text(notaSaida.obsNota, LEFT)
+    }
+  }
+
   fun makeReport(): JasperReportBuilder? {
     val colunms = columnBuilder().toTypedArray()
     var index = 1
@@ -204,7 +169,7 @@ class RelatorioNotaDevolucao(val notaSaida: NotaEntrada) {
       }
     }
     return report().title(titleBuider()).setTemplate(Templates.reportTemplate).columns(* colunms).columnGrid(* colunms)
-      .setDataSource(itens).setPageMargin(margin(28))
+      .setDataSource(itens).setPageMargin(margin(28)).summary(sumaryBuild())
       .summary(pageFooterBuilder()).subtotalsAtSummary(* subtotalBuilder().toTypedArray())
       .setSubtotalStyle(stl.style().setPadding(2).setTopBorder(stl.pen1Point()))
       .pageFooter(cmp.pageNumber().setHorizontalTextAlignment(RIGHT).setStyle(stl.style().setFontSize(8)))
